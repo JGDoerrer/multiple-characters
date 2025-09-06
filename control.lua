@@ -1,10 +1,14 @@
 require("gui")
 
-
 script.on_init(function()
 	if storage.tag_character == nil then
 		storage.tag_character = {}
 		storage.character_tag = {}
+		storage.character_queue = {}
+		storage.character_name = {}
+		storage.unit_number_character = {}
+		storage.recoloring_character = {}
+		storage.renaming_character = {}
 	end
 end)
 
