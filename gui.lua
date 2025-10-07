@@ -154,10 +154,20 @@ function build_frame(outer_frame, character, player)
         style = "mult_chars_other_character_button"
     end
 
+    local icon = character.name
+
+    if not prototypes.item[icon] then
+        if script.active_mods["jetpack"] and string.sub(icon, - #"-jetpack") == "-jetpack" then
+            icon = string.sub(icon, 0, #icon - #"-jetpack")
+        else
+            icon = "character"
+        end
+    end
+
     h_flow.add {
         type = "sprite-button",
         name = "mult_chars_char",
-        sprite = "item/" .. character.name,
+        sprite = "item/" .. icon,
         style = style,
         tags = {
             action = "mult_chars_switch_character",

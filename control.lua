@@ -86,6 +86,11 @@ function switch_character(player, target)
 
 	local opened = player.opened
 
+	register_character(old_char)
+	if target.type == "character" then
+		register_character(target)
+	end
+
 	if target.surface ~= player.surface then
 		player.set_controller { type = defines.controllers.ghost }
 		if not player.teleport(target.position, target.surface) then
@@ -331,6 +336,14 @@ function add_chart_tag(player, character)
 		name = player.name
 	end
 
+	if not prototypes.item[icon] then
+		if script.active_mods["jetpack"] and string.sub(icon, - #"-jetpack") == "-jetpack" then
+			icon = string.sub(icon, 0, #icon - #"-jetpack")
+		else
+			icon = "character"
+		end
+	end
+
 	local ctag = player.force.add_chart_tag(character.surface,
 		{
 			position = character.position,
@@ -417,6 +430,9 @@ script.on_event("switch-to-character",
 		if target ~= nil then
 			switch_to(player, target)
 		else
+			if player.character then
+				register_character(player.character)
+			end
 			toggle_gui(player)
 		end
 	end)
@@ -594,6 +610,22 @@ script.on_event(defines.events.on_player_mined_entity,
 
 script.on_event(defines.events.on_entity_died,
 	---@param event EventData.on_entity_died
+	function(event)
+		if event.entity.type ~= "character" then return end
+
+		unregister_character(event.entity)
+	end)
+
+script.on_event(defines.events.script_raised_built,
+	---@param event EventData.script_raised_built
+	function(event)
+		if event.entity.type ~= "character" then return end
+
+		register_character(event.entity)
+	end)
+
+script.on_event(defines.events.script_raised_destroy,
+	---@param event EventData.script_raised_destroy
 	function(event)
 		if event.entity.type ~= "character" then return end
 
