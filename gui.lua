@@ -19,6 +19,11 @@ function build_gui(player)
     if player == nil then return end
 
     local screen_element = player.gui.screen
+
+    if screen_element.mult_chars_color_picker ~= nil then
+        screen_element.mult_chars_color_picker.destroy()
+    end
+
     local main_frame = screen_element.mult_chars_main_frame
 
     if main_frame == nil then
@@ -247,12 +252,14 @@ function build_color_picker(player, color)
         color_picker = screen_element.add {
             type = "frame",
             name = "mult_chars_color_picker",
+            caption = { "multiple-characters.color-picker-title" },
         }
     else
         color_picker.clear()
     end
 
     color_picker.auto_center = true
+    color_picker.style.use_header_filler = true
     color_picker.bring_to_front()
     player.opened = color_picker
 
