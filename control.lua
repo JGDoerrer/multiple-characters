@@ -403,7 +403,7 @@ function rename_character(character_unit_number, new_name)
 	storage.character_name[character_unit_number] = new_name
 
 	local tag = storage.character_tag[character_unit_number]
-	if tag ~= nil and tag.text ~= new_name then
+	if tag ~= nil and tag.valid and tag.text ~= new_name then
 		tag.text = new_name
 	end
 end
@@ -477,9 +477,11 @@ script.on_event(defines.events.on_chart_tag_modified,
 
 		rename_character(character.unit_number, event.tag.text)
 
-		if event.tag.position ~= event.old_position then
+		if event.tag.position.x ~= event.old_position.x or event.tag.position.y ~= event.old_position.y then
 			event.tag.destroy()
-			add_chart_tag(game.players[event.player_index], character)
+			if event.player_index ~= nil then
+				add_chart_tag(game.players[event.player_index], character)
+			end
 		end
 
 		update_guis()
