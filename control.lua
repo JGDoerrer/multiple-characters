@@ -403,7 +403,7 @@ function rename_character(character_unit_number, new_name)
 	storage.character_name[character_unit_number] = new_name
 
 	local tag = storage.character_tag[character_unit_number]
-	if tag ~= nil then
+	if tag ~= nil and tag.text ~= new_name then
 		tag.text = new_name
 	end
 end
