@@ -104,40 +104,48 @@ function switch_character(player, target)
 	end
 
 	if target_player ~= nil then
-		if settings.get_player_settings(player)["character-swap"].value and settings.get_player_settings(target.player)["character-swap"].value then
-			local other_char = target_player.character
+		if not settings.get_player_settings(player)["character-swap"].value then
+			player.create_local_flying_text { text = { "multiple-characters.cannot-swap-self" }, create_at_cursor = true }
+			return
+		end
 
-			local target_opened = target_player.opened
+		if not settings.get_player_settings(target.player)["character-swap"].value then
+			player.create_local_flying_text { text = { "multiple-characters.cannot-swap-other" }, create_at_cursor = true }
+			return
+		end
 
-			target_player.set_controller { type = defines.controllers.ghost }
-			player.set_controller { type = defines.controllers.character, character = target }
-			target_player.set_controller { type = defines.controllers.character, character = old_char }
+		local other_char = target_player.character
 
-			player.opened = opened
-			target_player.opened = target_opened
+		local target_opened = target_player.opened
 
-			if vehicle ~= nil and old_char ~= nil then
-				if vehicle.type == "car" or vehicle.type == "spider-vehicle" then
-					if vehicle.get_driver() == nil then
-						vehicle.set_driver(old_char)
-					elseif vehicle.get_passenger() == nil then
-						vehicle.set_passenger(old_char)
-					end
-				elseif (vehicle.type == "locomotive" or vehicle.type == "cargo-wagon" or vehicle.type == "fluid-wagon" or vehicle.type == "artillery-wagon") and vehicle.get_driver() == nil then
+		target_player.set_controller { type = defines.controllers.ghost }
+		player.set_controller { type = defines.controllers.character, character = target }
+		target_player.set_controller { type = defines.controllers.character, character = old_char }
+
+		player.opened = opened
+		target_player.opened = target_opened
+
+		if vehicle ~= nil and old_char ~= nil then
+			if vehicle.type == "car" or vehicle.type == "spider-vehicle" then
+				if vehicle.get_driver() == nil then
 					vehicle.set_driver(old_char)
+				elseif vehicle.get_passenger() == nil then
+					vehicle.set_passenger(old_char)
 				end
+			elseif (vehicle.type == "locomotive" or vehicle.type == "cargo-wagon" or vehicle.type == "fluid-wagon" or vehicle.type == "artillery-wagon") and vehicle.get_driver() == nil then
+				vehicle.set_driver(old_char)
 			end
+		end
 
-			if target_vehicle ~= nil and other_char ~= nil then
-				if target_vehicle.type == "car" or target_vehicle.type == "spider-vehicle" then
-					if target_vehicle.get_driver() == nil then
-						target_vehicle.set_driver(other_char)
-					elseif target_vehicle.get_passenger() == nil then
-						target_vehicle.set_passenger(other_char)
-					end
-				elseif vehicle ~= nil and (vehicle.type == "locomotive" or vehicle.type == "cargo-wagon" or vehicle.type == "fluid-wagon" or vehicle.type == "artillery-wagon") and vehicle.get_driver() == nil then
+		if target_vehicle ~= nil and other_char ~= nil then
+			if target_vehicle.type == "car" or target_vehicle.type == "spider-vehicle" then
+				if target_vehicle.get_driver() == nil then
 					target_vehicle.set_driver(other_char)
+				elseif target_vehicle.get_passenger() == nil then
+					target_vehicle.set_passenger(other_char)
 				end
+			elseif vehicle ~= nil and (vehicle.type == "locomotive" or vehicle.type == "cargo-wagon" or vehicle.type == "fluid-wagon" or vehicle.type == "artillery-wagon") and vehicle.get_driver() == nil then
+				target_vehicle.set_driver(other_char)
 			end
 		end
 	else
@@ -153,11 +161,11 @@ function switch_character(player, target)
 			player.opened = opened
 		end
 
-		target.minable = false
+		target.minable_flag = false
 
 		if old_char ~= nil then
 			old_char.walking_state = { walking = false, direction = defines.direction.south }
-			old_char.minable = true
+			old_char.minable_flag = true
 
 			if vehicle ~= nil then
 				if vehicle.type == "car" or vehicle.type == "spider-vehicle" then
@@ -370,7 +378,7 @@ function register_character(character)
 	end
 	storage.unit_number_character[character.unit_number] = character
 
-	character.minable = (character.player == nil)
+	character.minable_flag = (character.player == nil)
 
 	update_guis()
 end
@@ -506,7 +514,7 @@ script.on_event(defines.events.on_player_joined_game,
 		storage.character_name[character.unit_number] = player.name
 
 		if character ~= nil then
-			character.minable = false
+			character.minable_flag = false
 		end
 	end)
 
@@ -558,7 +566,7 @@ script.on_event(defines.events.on_player_respawned,
 		end
 		storage.character_name[character.unit_number] = player.name
 
-		character.minable = false
+		character.minable_flag = false
 
 		if storage.character_queue == nil then return end
 		local queue = storage.character_queue[player.index]

@@ -75,7 +75,7 @@ data:extend {
 	{
 		type = "recipe",
 		name = "character",
-		category = "crafting",
+		categories = { "crafting" },
 		ingredients = {
 			{
 				type = "item",
@@ -193,7 +193,7 @@ if settings.startup["character-upgrades"].value then
 		{
 			type = "recipe",
 			name = "fast-character",
-			category = "crafting",
+			categories = { "crafting" },
 			ingredients = {
 				{
 					type = "item",
@@ -257,7 +257,7 @@ if settings.startup["character-upgrades"].value then
 		{
 			type = "recipe",
 			name = "long-range-character",
-			category = "crafting",
+			categories = { "crafting" },
 			ingredients = {
 				{
 					type = "item",
@@ -312,6 +312,7 @@ if settings.startup["character-upgrades"].value then
 	strong_character.max_health = strong_character.max_health * 1.5
 	strong_character.inventory_size = strong_character.inventory_size * 1.5
 	strong_character.mining_speed = strong_character.mining_speed * 1.5
+	strong_character.crafting_speed = (strong_character.crafting_speed or 1) * 1.5
 	strong_character.resistances = {
 		{
 			type = "physical",
@@ -324,7 +325,7 @@ if settings.startup["character-upgrades"].value then
 		{
 			type = "recipe",
 			name = "strong-character",
-			category = "crafting",
+			categories = { "crafting" },
 			ingredients = {
 				{
 					type = "item",
@@ -391,6 +392,7 @@ if settings.startup["character-upgrades"].value then
 	allround_character.max_health = allround_character.max_health * 1.25
 	allround_character.inventory_size = allround_character.inventory_size * 1.25
 	allround_character.mining_speed = allround_character.mining_speed * 1.25
+	allround_character.crafting_speed = (allround_character.crafting_speed or 1) * 1.25
 	allround_character.resistances = {
 		{
 			type = "physical",
@@ -403,7 +405,7 @@ if settings.startup["character-upgrades"].value then
 		{
 			type = "recipe",
 			name = "allround-character",
-			category = "crafting",
+			categories = { "crafting" },
 			ingredients = {
 				{
 					type = "item",

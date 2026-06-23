@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.5.0
+Date: 2026-06-23
+  Features:
+    - Compatible with 2.1
+    - Make strong and allround character better at crafting
+    - Show text when unable to swap with other player
+---------------------------------------------------------------------------------------------------
 Version: 0.4.7
 Date: 2025-11-07
   Bugfixes:
